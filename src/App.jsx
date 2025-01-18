@@ -5,8 +5,10 @@ const App = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [cityName, setCityName] = useState("");
   const [error, setError] = useState(null);
+  const [loader,setLoader] = useState(false);
 
   const fetchData = async (e) => {
+    setLoader(true);
     if (e.key === "Enter") {
       try {
         const data = await fetchWeather(cityName);
@@ -17,6 +19,7 @@ const App = () => {
         setError(error.message);
       }
     }
+    setLoader(false);
   };
   return (
     <div>
@@ -27,27 +30,28 @@ const App = () => {
         onChange={(e) => setCityName(e.target.value)}
         onKeyDown={fetchData}
       />
+      {loader && <div style={{ color: "red" }}>loading...</div>}
       {error && <div style={{ color: "red" }}>{error}</div>}
-      {weatherData && (
+      {!loader &&  weatherData &&  (
         <div>
           <h2>
-            {weatherData.location.name}, {weatherData.location.region},{" "}
-            {weatherData.location.country}
+            {weatherData?.location?.name}, {weatherData?.location?.region},{" "}
+            {weatherData?.location?.country}
           </h2>
           <p>
-            Temperature: {weatherData.current.temp_c} °C (
-            {weatherData.current.temp_f} °F)
+            Temperature: {weatherData?.current?.temp_c} °C (
+            {weatherData?.current?.temp_f} °F)
           </p>
-          <p>Condition: {weatherData.current.condition.text}</p>
+          <p>Condition: {weatherData?.current?.condition?.text}</p>
           <img
-            src={weatherData.current.condition.icon}
-            alt={weatherData.current.condition.text}
+            src={weatherData?.current?.condition?.icon}
+            alt={weatherData?.current?.condition?.text}
           />
-          <p>Humidity: {weatherData.current.humidity}</p>
-          <p>Pressure: {weatherData.current.pressure_mb}</p>
-          <p>Visibility: {weatherData.current.vis_km}</p>
+          <p>Humidity: {weatherData?.current?.humidity}</p>
+          <p>Pressure: {weatherData?.current?.pressure_mb}</p>
+          <p>Visibility: {weatherData?.current?.vis_km}</p>
         </div>
-      )}
+      )} 
     </div>
   );
 };
