@@ -6,6 +6,8 @@ const App = () => {
   const [cityName, setCityName] = useState("");
   const [error, setError] = useState(null);
   const [loader,setLoader] = useState(false);
+  const [history,setHistory] = useState([]);
+
 
   const fetchData = async (e) => {
     setLoader(true);
@@ -15,6 +17,7 @@ const App = () => {
         setWeatherData(data);
         setCityName("");
         setError(null);
+        setHistory((old)=> [cityName, ...old])
       } catch (error) {
         setError(error.message);
       }
@@ -52,6 +55,15 @@ const App = () => {
           <p>Visibility: {weatherData?.current?.vis_km}</p>
         </div>
       )} 
+
+      <div>
+        <h1>history</h1>
+        {history.map((name, i) => (
+            <li key={i}>
+              <span onClick={() => fetchData(name)}>{name}</span>
+            </li>
+          ))}
+      </div>
     </div>
   );
 };
